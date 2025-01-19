@@ -8,7 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-enum class CoffeeType { ESPRESSO, LATE }
+enum class CoffeeType { ESPRESSO, LATTE }
 class Milk
 class GroundCoffee
 
@@ -24,15 +24,13 @@ class Latte(milk: Milk, espresso: Espresso) : Coffee() {
 
 suspend fun main() = coroutineScope {
     // TODO
-    
-    
-    
-    println("Hello in Dream Coffee!")
-    println("Press E to get espresso, L to get late.")
+
+    println("Welcome to Dream Coffee!")
+    println("Press E to get espresso, L to get latte.")
     while (true) {
         val type = when (readlnOrNull()) {
             "E" -> CoffeeType.ESPRESSO
-            "L" -> CoffeeType.LATE
+            "L" -> CoffeeType.LATTE
             else -> continue
         }
         // TODO
@@ -45,7 +43,7 @@ private suspend fun makeCoffee(order: CoffeeType, baristaName: String): Coffee {
     val espresso = makeEspresso(groundCoffee, baristaName)
     return when (order) {
         CoffeeType.ESPRESSO -> espresso
-        CoffeeType.LATE -> {
+        CoffeeType.LATTE -> {
             val milk = brewMilk(baristaName)
             Latte(milk, espresso)
         }
