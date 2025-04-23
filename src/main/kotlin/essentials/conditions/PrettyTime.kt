@@ -1,20 +1,81 @@
-package essentials.conditions.prettytime
+@file:Suppress("KotlinConstantConditions")
+
+package essentials.conditions
 
 import org.junit.Test
 import kotlin.test.assertEquals
 
+const val MINUTE = 60
+const val HOUR = 3600
+const val SECONDS = 60
+
+val Int.minutes get() = this / SECONDS
+val Int.seconds get() = this % SECONDS
+
 fun secondsToPrettyTime(seconds: Int): String {
-    return ""
+    return when {
+        seconds.negative -> "Invalid input"
+        seconds.zero -> "Now"
+        seconds.secondsOnly() -> "$seconds sec"
+        seconds.oneMinute() -> "1 min"
+        seconds.greaterThanMinuteNoHours() -> seconds.minutesAndSeconds()
+        seconds.includeHours() -> seconds.hoursMinutesSeconds()
+        else -> "Invalid input"
+    }
 }
 
+fun Int.secondsOnly() = toString().length == 2 && this < 60
+
+fun Int.oneMinute(): Boolean {
+    return this == 60
+}
+
+val Int.negative get() = this < -0
+
+val Int.zero get() = this == 0
+
+fun Int.greaterThanMinuteNoHours() = this in (61 until 3600)
+
+fun Int.minutesAndSeconds(): String {
+    val minutes = this / 60
+    val seconds = this % 60
+    return "$minutes min $seconds sec"
+}
+
+fun Int.includeHours() = this >= 3600
+
+fun Int.hoursMinutesSeconds(): String {
+    val hours = this / 3600
+    val minutesInSeconds = this % 3600
+    val minutes = minutesInSeconds / 60
+    val seconds = minutesInSeconds % 60
+    return when {
+        roundHours() -> "$hours h"
+        hoursSecondsNoMinutes() -> "$hours h $seconds sec"
+        minutes > 0 -> {
+            "$hours h $minutes min $seconds sec"
+        }
+
+        else ->
+            "$hours h $seconds sec"
+    }
+}
+
+fun Int.roundMinutes() = this % 60 == 0
+
+fun Int.roundHours() = this % 3600 == 0
+
+fun Int.hoursSecondsNoMinutes() = this > 3600 && !roundHours() && roundMinutes()
+
+
 fun main() {
-    println(secondsToPrettyTime(-1)) // Invalid input
-    println(secondsToPrettyTime(0)) // Now
-    println(secondsToPrettyTime(45)) // 45 sec
-    println(secondsToPrettyTime(60)) // 1 min
-    println(secondsToPrettyTime(150)) // 2 min 30 sec
-    println(secondsToPrettyTime(1410)) // 23 min 30 sec
-    println(secondsToPrettyTime(60 * 60)) // 1 h
+    println(secondsToPrettyTime(-1)) // Invalid input -> done
+    println(secondsToPrettyTime(0)) // Now -> done
+    println(secondsToPrettyTime(45)) // 45 sec -> done
+    println(secondsToPrettyTime(60)) // 1 min -> done
+    println(secondsToPrettyTime(150)) // 2 min 30 sec -> done
+    println(secondsToPrettyTime(1410)) // 23 min 30 sec -> done
+    println(secondsToPrettyTime(60 * 60)) // 1 h -> done
     println(secondsToPrettyTime(3665)) // 1 h 1 min 5 sec
 }
 

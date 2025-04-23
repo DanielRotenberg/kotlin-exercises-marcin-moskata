@@ -5,8 +5,32 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 fun processUserInformation(user: User?): String {
-    return ""
+    return guardCloseSolution(user)
 }
+
+private fun guardCloseSolution(user: User?): String {
+    fun processAge(age: Int?): Int {
+        return age ?: 0
+    }
+
+    user ?: return "Missing user information"
+    user.name ?: throw IllegalArgumentException()
+    if (user.email?.email?.isNotBlank() != true) return "Missing email"
+
+    return "User ${user.name} is ${processAge(user.age)} years old, email: ${user.email.email}"
+}
+
+
+// Simple solution approach witch treats all conditions "equally" as part of optional branching
+private fun simpleSolution(user: User?) =
+    when {
+        user == null -> "Missing user information"
+        user.name == null -> throw IllegalArgumentException()
+        user.email == null || user.email.email == null || user.email.email.isBlank() -> "Missing email"
+        user.age == null -> "User ${user.name} is 0 years old, email: ${user.email.email}"
+        else -> "User ${user.name} is ${user.age} years old, email: ${user.email.email}"
+
+    }
 
 data class EmailAddress(val email: String?)
 
@@ -19,7 +43,7 @@ data class User(
 fun main() {
     println(processUserInformation(null))
     // Missing user information
-    
+
     val user1 = User(
         "John",
         30,
@@ -27,7 +51,7 @@ fun main() {
     )
     println(processUserInformation(user1))
     // User John is 30 years old, email: john@example.com
-    
+
     val user2 = User(
         "Alice",
         null,
@@ -35,7 +59,7 @@ fun main() {
     )
     println(processUserInformation(user2))
     // User Alice is 0 years old, email: alice@example.com
-    
+
     val user3 = User(
         "Bob",
         25,
@@ -43,7 +67,7 @@ fun main() {
     )
     println(processUserInformation(user3))
     // Missing email
-    
+
     val user6 = User(
         null,
         40,

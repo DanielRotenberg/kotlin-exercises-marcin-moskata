@@ -2,16 +2,18 @@ package essentials.loops.loops
 
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.text.buildString
 
-fun calculateSumOfSquares(n: Int): Int = TODO()
+fun calculateSumOfSquares(n: Int): Int = (1..n).sumOf { it * it }
 
-fun calculateSumOfEven(n: Int): Int = TODO()
+fun calculateSumOfEven(n: Int): Int = (0..n).filter { it % 2 == 0 }.sum()
 
 fun countDownByStep(
     start: Int,
     end: Int,
     step: Int
-): String = TODO()
+): String = (start downTo end step step).joinToString(separator = ", ")
+
 
 fun main() {
     // Examples for calculateSumOfSquares
@@ -20,7 +22,7 @@ fun main() {
     println(calculateSumOfSquares(2)) // 5 (1 + 4)
     println(calculateSumOfSquares(3)) // 14 (1 + 4 + 9)
     println(calculateSumOfSquares(4)) // 30 (1 + 4 + 9 + 16)
-    
+
     // Example for calculateSumOfEven
     println(calculateSumOfEven(0)) // 0
     println(calculateSumOfEven(1)) // 0
@@ -33,7 +35,7 @@ fun main() {
     // 42 (2 + 4 + 6 + 8 + 10 + 12)
     println(calculateSumOfEven(20))
     // 110 (2 + 4 + 6 + 8 + 10 + 12 + 14 + 16 + 18 + 20)
-    
+
     // Example for countDownByStep
     println(countDownByStep(1, 1, 1)) // 1
     println(countDownByStep(5, 1, 2)) // 5, 3, 1
